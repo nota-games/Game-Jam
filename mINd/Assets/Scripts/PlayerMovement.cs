@@ -9,19 +9,14 @@ public class PlayerMovement : MonoBehaviour
 
     public Vector2 input;
     Rigidbody2D playerbody;
+    
+    [Tooltip("Скорость передвижения на земле")]
     float speed = 4f;
+    [Tooltip("Скорость передвижения в воздухе")]
     float airSpeed = 4.25f;
-
-    [Tooltip("Сила прыжка")]
-    public float jumpPower = 6f;
     [Tooltip("Гравитация в воздухе")]
     public float fallingGravityScale = 2f;
-
-
-    public Transform groundCheck;
-    public LayerMask ground;
-    public float radius = 0.2f;
-    public bool isGrounded;
+    bool isGrounded;
 
     void Awake()
     {
@@ -30,17 +25,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (playerbody.velocity.x > 0f)
-            transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
-        else if (playerbody.velocity.x < 0f)
-            transform.rotation = new Quaternion(0f, 180f, 0f, 1f);
+        switch (playerbody.velocity.x)
+        {
+            case 1f:
+                transform.rotation = new Quaternion(0f, 0f, 0f, 1f); break;
+            case -1f:
+                transform.rotation = new Quaternion(0, 180f, 0f, 1f); break;
+        }
     }
 
     void FixedUpdate()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, radius, ground);
+        isGrounded = GetComponent<PlayerJump>().CheckGround(); ;
         Move();
-        Falling();
+        AirGravity();
     }
 
     void Move()
@@ -50,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
         playerbody.velocity = new Vector2(input.x * speedScale, playerbody.velocity.y);
     }
 
-    void Falling()
+    void AirGravity()
     {
         playerbody.gravityScale = Convert.ToInt32(isGrounded) 
                                 + Convert.ToInt32(!isGrounded) * fallingGravityScale;
@@ -61,13 +59,5 @@ public class PlayerMovement : MonoBehaviour
         if (!context.performed)
             return;
         input = context.ReadValue<Vector2>();
-    }
-
-    public void Jump(InputAction.CallbackContext context)
-    {
-        if (!context.performed || !isGrounded)
-            return;
-        playerbody.velocity = new Vector2(playerbody.velocity.x, 0f);
-        playerbody.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
     }
 }
