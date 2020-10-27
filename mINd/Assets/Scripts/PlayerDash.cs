@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +11,15 @@ public class PlayerDash : MonoBehaviour
     bool isGrounded;
     bool isActive;
 
+    public Transform attackcheck;
+    public LayerMask Enemy;
+    public float radius = 0.2f;
+
+    Collider2D[] damagedEnemies;
+
+    [Tooltip("Дальность дэша в клетках")]
+    float dashRange = 7.5f;
+
     void Awake()
     {
         playerbody = GetComponent<Rigidbody2D>();
@@ -19,6 +29,15 @@ public class PlayerDash : MonoBehaviour
     void FixedUpdate()
     {
         isGrounded = GetComponent<PlayerMovement>().isGrounded;
+        if (!GetComponent<PlayerMovement>().enabled)
+            damagedEnemies = Physics2D.OverlapCircleAll(attackcheck.position, radius, Enemy) ;
+        if (damagedEnemies != null)
+        {
+            foreach (Collider2D e in damagedEnemies)
+            {
+                Destroy(e.gameObject);
+            }
+        }
     }
 
     public void Dash(InputAction.CallbackContext context)
@@ -38,9 +57,9 @@ public class PlayerDash : MonoBehaviour
     {
         GetComponent<PlayerMovement>().enabled = false;
         playerbody.velocity = Vector2.zero;
-        playerbody.velocity = direction * 15f;
-        //playerbody.velocity = new Vector2(direction.x * 30f, 0f);
-        yield return new WaitForSecondsRealtime(0.2f);
+        //playerbody.velocity = direction * 15f;
+        playerbody.velocity = new Vector2(direction.x * dashRange * 4, 0f);
+        yield return new WaitForSecondsRealtime(0.25f);
         GetComponent<PlayerMovement>().enabled = true;
     }
 

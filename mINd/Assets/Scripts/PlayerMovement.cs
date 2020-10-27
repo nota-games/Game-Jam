@@ -9,16 +9,15 @@ public class PlayerMovement : MonoBehaviour
 
     public Vector2 input;
     Rigidbody2D playerbody;
-    float speed = 5f;
-    float airSpeed = 5.25f;
-    float fallSpeed = 5.75f;
+    float speed = 4f;
+    float airSpeed = 4.25f;
 
     [Tooltip("Сила прыжка")]
     public float jumpPower = 6f;
-    [Tooltip("Гравитация при переходе в фазу падения")]
-    public float fallingGravityScale = 0.95f;
+    [Tooltip("Гравитация в воздухе")]
+    public float fallingGravityScale = 2f;
 
-    
+
     public Transform groundCheck;
     public LayerMask ground;
     public float radius = 0.2f;
@@ -47,15 +46,14 @@ public class PlayerMovement : MonoBehaviour
     void Move()
     {
         float speedScale = Convert.ToInt32(isGrounded) * speed
-                         + Convert.ToInt32(!isGrounded && playerbody.velocity.y >= 0f) * airSpeed
-                         + Convert.ToInt32(!isGrounded && playerbody.velocity.y < 0f) * fallSpeed;
+                         + Convert.ToInt32(!isGrounded) * airSpeed;
         playerbody.velocity = new Vector2(input.x * speedScale, playerbody.velocity.y);
     }
 
     void Falling()
     {
-        playerbody.gravityScale = Convert.ToInt32(playerbody.velocity.y >= 0f)
-                                + Convert.ToInt32(playerbody.velocity.y < 0f) * fallingGravityScale;
+        playerbody.gravityScale = Convert.ToInt32(isGrounded) 
+                                + Convert.ToInt32(!isGrounded) * fallingGravityScale;
     }
 
     public void GetAxis(InputAction.CallbackContext context)
@@ -69,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!context.performed || !isGrounded)
             return;
+        playerbody.velocity = new Vector2(playerbody.velocity.x, 0f);
         playerbody.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
     }
 }
