@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerJump : MonoBehaviour
 {
-    Rigidbody2D playerbody;
+    Rigidbody2D playerBody;
     public float jumpPower = 9.5f;
 
     public Transform groundCheck;
@@ -15,7 +15,7 @@ public class PlayerJump : MonoBehaviour
 
     void Awake()
     {
-        playerbody = GetComponent<Rigidbody2D>();
+        playerBody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -32,7 +32,7 @@ public class PlayerJump : MonoBehaviour
     {
         if (!context.performed || !isGrounded)
             return;
-        playerbody.velocity = new Vector2(playerbody.velocity.x, 0f);
-        playerbody.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
+        playerBody.velocity = new Vector2(playerBody.velocity.x, 0f);
+        playerBody.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
     }
 }

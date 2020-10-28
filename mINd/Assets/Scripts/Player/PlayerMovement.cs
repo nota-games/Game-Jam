@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
 {
 
     public Vector2 input;
-    Rigidbody2D playerbody;
+    Rigidbody2D playerBody;
     
     [Tooltip("Скорость передвижения на земле")]
     float speed = 4f;
@@ -20,12 +20,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
-        playerbody = GetComponent<Rigidbody2D>();
+        playerBody = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
-        switch (playerbody.velocity.x)
+        switch (input.x)
         {
             case 1f:
                 transform.rotation = new Quaternion(0f, 0f, 0f, 1f); break;
@@ -45,12 +45,12 @@ public class PlayerMovement : MonoBehaviour
     {
         float speedScale = Convert.ToInt32(isGrounded) * speed
                          + Convert.ToInt32(!isGrounded) * airSpeed;
-        playerbody.velocity = new Vector2(input.x * speedScale, playerbody.velocity.y);
+        playerBody.velocity = new Vector2(input.x * speedScale, playerBody.velocity.y);
     }
 
     void AirGravity()
     {
-        playerbody.gravityScale = Convert.ToInt32(isGrounded) 
+        playerBody.gravityScale = Convert.ToInt32(isGrounded) 
                                 + Convert.ToInt32(!isGrounded) * fallingGravityScale;
     }
 

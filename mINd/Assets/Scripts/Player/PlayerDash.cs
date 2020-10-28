@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerDash : MonoBehaviour
 {
-    Rigidbody2D playerbody;
+    Rigidbody2D playerBody;
     PlayerMovement player;
 
     [Tooltip("Дальность дэша в клетках")]
@@ -21,7 +21,7 @@ public class PlayerDash : MonoBehaviour
 
     void Awake()
     {
-        playerbody = GetComponent<Rigidbody2D>();
+        playerBody = GetComponent<Rigidbody2D>();
         player = GetComponent<PlayerMovement>();
     }
 
@@ -40,7 +40,8 @@ public class PlayerDash : MonoBehaviour
 
         foreach (Collider2D e in damagedEnemies)
         {
-            Destroy(e.gameObject);
+            Health enemyHealth = e.GetComponent<EnemyHealth>().health;
+            enemyHealth.Damage(3);
         }
     }
 
@@ -59,11 +60,11 @@ public class PlayerDash : MonoBehaviour
 
     IEnumerator Stun()
     {
-        playerbody.velocity = Vector2.zero;
+        playerBody.velocity = Vector2.zero;
 
         player.enabled = false;
 
-        playerbody.velocity = new Vector2(direction.x * dashRange * 4, 0f);
+        playerBody.velocity = new Vector2(direction.x * dashRange * 4, 0f);
         yield return new WaitForSecondsRealtime(0.25f);
         isActive = false;
 
