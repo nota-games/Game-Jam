@@ -12,11 +12,13 @@ public class PlayerDash : MonoBehaviour
     [Tooltip("Дальность дэша в клетках")]
     float dashRange = 7.5f;
     Vector2 direction;
-    bool isActive = true;
+    public float isActive = 1f;
+    [Tooltip("Время отката дэша")]
+    float coolDown = 5f;
 
     public Transform attackcheck;
     public LayerMask Enemy;
-    public float radius = 1f;
+    public float radius = 0.7f;
     Collider2D[] damagedEnemies;
 
     void Awake()
@@ -25,12 +27,19 @@ public class PlayerDash : MonoBehaviour
         player = GetComponent<PlayerMovement>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        Damage();
+        if (isActive < 1)
+            isActive += (1 / coolDown) * Time.deltaTime;
+        isActive = Mathf.Clamp01(isActive);
     }
 
-    void Damage()
+    void FixedUpdate()
+    {
+        DealDamage();
+    }
+
+    void DealDamage()
     {
         if (!player.enabled)
             damagedEnemies = Physics2D.OverlapCircleAll(attackcheck.position, radius, Enemy);
@@ -41,13 +50,13 @@ public class PlayerDash : MonoBehaviour
         foreach (Collider2D e in damagedEnemies)
         {
             Health enemyHealth = e.GetComponent<EnemyHealth>().health;
-            enemyHealth.Damage(3);
+            enemyHealth.Damage(1);
         }
     }
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if (!context.performed || !isActive)
+        if (!context.performed || isActive < 1f)
             return;
 
         direction = player.input;
@@ -55,7 +64,6 @@ public class PlayerDash : MonoBehaviour
             direction = transform.right;
 
         StartCoroutine(Stun());
-        StartCoroutine(CoolDown());
     }
 
     IEnumerator Stun()
@@ -64,16 +72,15 @@ public class PlayerDash : MonoBehaviour
 
         player.enabled = false;
 
-        playerBody.velocity = new Vector2(direction.x * dashRange * 4, 0f);
+        playerBody.velocity = new Vector2(direction.x, direction.y / 1.7f) * dashRange * 4;
         yield return new WaitForSecondsRealtime(0.25f);
-        isActive = false;
+        isActive = 0;
 
         player.enabled = true;
     }
 
-    IEnumerator CoolDown()
+    private void OnDrawGizmosSelected()
     {
-        yield return new WaitForSecondsRealtime(2f);
-        isActive = true;
+        Gizmos.DrawWireSphere(attackcheck.position, radius);
     }
 }

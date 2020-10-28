@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     float speed = 4f;
     [Tooltip("Скорость передвижения в воздухе")]
     float airSpeed = 4.25f;
+    float currentSpeed;
     [Tooltip("Гравитация в воздухе")]
     public float fallingGravityScale = 2f;
     bool isGrounded;
@@ -36,16 +37,23 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        isGrounded = GetComponent<PlayerJump>().CheckGround(); ;
+        isGrounded = GetComponent<PlayerJump>().CheckGround();
+        currentSpeed = Mathf.Abs(playerBody.velocity.x);
         Move();
         AirGravity();
     }
 
     void Move()
     {
-        float speedScale = Convert.ToInt32(isGrounded) * speed
-                         + Convert.ToInt32(!isGrounded) * airSpeed;
-        playerBody.velocity = new Vector2(input.x * speedScale, playerBody.velocity.y);
+        if (!isGrounded)
+            playerBody.velocity = new Vector2(input.x * airSpeed, playerBody.velocity.y);
+        else if (input.x != 0f)
+        {
+            playerBody.velocity += new Vector2(input.x * (speed / 8), 0f);
+            playerBody.velocity = new Vector2(Mathf.Clamp(playerBody.velocity.x, -speed, speed), playerBody.velocity.y);
+        }   
+        else if (currentSpeed <= 3.5f)
+            playerBody.velocity = new Vector2(0f, playerBody.velocity.y);
     }
 
     void AirGravity()

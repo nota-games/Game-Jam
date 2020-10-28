@@ -40,7 +40,11 @@ public class EnemyMovement : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
             enemySpeed = 0f;
-        else
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
             enemySpeed = 3f;
     }
 }
