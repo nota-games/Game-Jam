@@ -72,7 +72,7 @@ public class PlayerDash : MonoBehaviour
 
         player.enabled = false;
 
-        playerBody.velocity = new Vector2(direction.x, direction.y / 1.7f) * dashRange * 4;
+        playerBody.velocity = new Vector2(direction.x, direction.y) * dashRange * 4;
         yield return new WaitForSecondsRealtime(0.25f);
         isActive = 0;
 
