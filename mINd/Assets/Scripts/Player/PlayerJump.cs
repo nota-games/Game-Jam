@@ -18,6 +18,11 @@ public class PlayerJump : MonoBehaviour
     public LayerMask Enemy;
     Collider2D[] damagedEnemies;
 
+    public Transform wallCheck;
+    public LayerMask wall;
+    public bool gdeWall;
+    bool isKeyDown;
+
     void Awake()
     {
         playerBody = GetComponent<Rigidbody2D>();
@@ -27,7 +32,21 @@ public class PlayerJump : MonoBehaviour
     void Update()
     {
         isGrounded = CheckGround();
+        gdeWall = CheckWall();
         DealDamage();
+        Debug.Log(isKeyDown);
+    }
+
+    private void FixedUpdate()
+    {
+        if (isKeyDown && playerBody.velocity.y > 0f)
+        {
+            player.fallingGravityScale = 1f;
+        }
+        else if(!isGrounded)
+        {
+            player.fallingGravityScale = 2f;
+        }
     }
 
     public bool CheckGround()
@@ -35,15 +54,25 @@ public class PlayerJump : MonoBehaviour
         return Physics2D.OverlapCircle(groundCheck.position, radius, ground);
     }
 
+    public bool CheckWall()
+    {
+        return Physics2D.OverlapCircle(wallCheck.position, radius, wall);
+    }
+
     public void Jump(InputAction.CallbackContext context)
     {
+        isKeyDown = !context.canceled;
         if (!context.performed)
             return;
         playerBody.velocity = new Vector2(playerBody.velocity.x, 0f);
 
         if (isGrounded)
             playerBody.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
-        else
+
+        if (gdeWall)
+            StartCoroutine(Stan());
+
+        else if(!isGrounded && !gdeWall)
         {
             StartCoroutine(Stun());
         }      
@@ -75,4 +104,26 @@ public class PlayerJump : MonoBehaviour
 
         player.enabled = true;
     }
+
+    IEnumerator Stan()
+    {
+        playerBody.velocity = Vector2.zero;
+
+        player.enabled = false;
+
+        playerBody.AddForce((transform.up - transform.right) * jumpPower, ForceMode2D.Impulse);
+        
+        switch (transform.rotation.y)
+        {
+            case 180f:
+                transform.rotation = new Quaternion(0f, 0f, 0f, 1f); break;
+            case 0f:
+                transform.rotation = new Quaternion(0, 180f, 0f, 1f); break;
+        }
+        yield return new WaitForSecondsRealtime(0.5f);
+        player.enabled = true;
+    }
+
+
+    
 }
