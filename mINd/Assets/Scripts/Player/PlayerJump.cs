@@ -20,6 +20,7 @@ public class PlayerJump : MonoBehaviour
 
     public Transform wallCheck;
     public LayerMask wall;
+    public float wallradius = 0.2f;
     public bool gdeWall;
     bool isKeyDown;
 
@@ -56,7 +57,7 @@ public class PlayerJump : MonoBehaviour
 
     public bool CheckWall()
     {
-        return Physics2D.OverlapCircle(wallCheck.position, radius, wall);
+        return Physics2D.OverlapCircle(wallCheck.position, wallradius, wall);
     }
 
     public void Jump(InputAction.CallbackContext context)
@@ -88,6 +89,8 @@ public class PlayerJump : MonoBehaviour
 
         foreach (Collider2D e in damagedEnemies)
         {
+            if (!e.CompareTag("Enemy"))
+                continue;
             Health enemyHealth = e.GetComponent<EnemyHealth>().health;
             enemyHealth.Damage(1);
         }
@@ -112,7 +115,7 @@ public class PlayerJump : MonoBehaviour
         player.enabled = false;
 
         playerBody.AddForce((transform.up - transform.right) * jumpPower, ForceMode2D.Impulse);
-        
+
         switch (transform.rotation.y)
         {
             case 180f:
@@ -120,6 +123,7 @@ public class PlayerJump : MonoBehaviour
             case 0f:
                 transform.rotation = new Quaternion(0, 180f, 0f, 1f); break;
         }
+
         yield return new WaitForSecondsRealtime(0.5f);
         player.enabled = true;
     }

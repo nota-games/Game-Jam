@@ -7,9 +7,19 @@ public class EnemyMovement : MonoBehaviour
     Rigidbody2D enemyBody;
 
     public float enemySpeed = 3f;
+    public float enemyJumpPower = 1f;
 
-    public Transform edgeCheck;
+    public Transform topCheck;
+    public Transform midCheck;
+    public Transform bottomCheck;
     public LayerMask ground;
+    float radius = 0.4f;
+
+    public Transform groundCheck;
+    public bool isGrounded;
+
+    Transform playerPosition;
+    bool isPlayerNear;
 
     void Awake()
     {
@@ -18,9 +28,23 @@ public class EnemyMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!Physics2D.OverlapBox(edgeCheck.position, Vector2.one, 90f, ground))
-            TurnAround();
-        enemyBody.velocity = transform.right * enemySpeed;
+        if (Physics2D.OverlapCircle(bottomCheck.position, radius, ground))
+            Move();
+        if (!Physics2D.OverlapCircle(bottomCheck.position, radius, ground)
+         || Physics2D.OverlapCircle(midCheck.position, radius, ground))
+        {
+            if (!Physics2D.OverlapCircle(topCheck.position, radius, ground) && Physics2D.OverlapCircle(groundCheck.position, radius, ground))
+                Jump();
+            else if (Physics2D.OverlapCircle(topCheck.position, radius, ground))
+                TurnAround();
+        }
+            
+    }
+
+    void Move()
+    {
+        if (!isPlayerNear)
+            enemyBody.velocity = new Vector2(transform.right.x * enemySpeed, enemyBody.velocity.y);
     }
 
     void TurnAround()
@@ -36,15 +60,20 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    void Jump()
+    {
+        enemyBody.AddForce(transform.up * enemyJumpPower, ForceMode2D.Impulse);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
-            enemySpeed = 0f;
+        isPlayerNear = collision.CompareTag("Player");
+        playerPosition = collision.transform;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
-            enemySpeed = 3f;
+        isPlayerNear = !collision.CompareTag("Player");
+        playerPosition = null;
     }
 }

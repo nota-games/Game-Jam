@@ -24,6 +24,8 @@ public class PlayerMeleeAttack : MonoBehaviour
             return;
         foreach (Collider2D e in enemies)
         {
+            if (!e.CompareTag("Enemy"))
+                continue;
             Health enemyHealth = e.GetComponent<EnemyHealth>().health;
             enemyHealth.Damage(1);
         }

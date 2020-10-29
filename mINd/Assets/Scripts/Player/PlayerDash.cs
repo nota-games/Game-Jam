@@ -49,6 +49,8 @@ public class PlayerDash : MonoBehaviour
 
         foreach (Collider2D e in damagedEnemies)
         {
+            if (!e.CompareTag("Enemy"))
+                continue;
             Health enemyHealth = e.GetComponent<EnemyHealth>().health;
             enemyHealth.Damage(1);
         }
@@ -72,7 +74,7 @@ public class PlayerDash : MonoBehaviour
 
         player.enabled = false;
 
-        playerBody.velocity = new Vector2(direction.x, direction.y) * dashRange * 4;
+        playerBody.velocity = new Vector2(direction.x, direction.y / 1.5f) * dashRange * 4;
         yield return new WaitForSecondsRealtime(0.25f);
         isActive = 0;
 
