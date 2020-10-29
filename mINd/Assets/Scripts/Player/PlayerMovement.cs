@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D playerBody;
     
     [Tooltip("Скорость передвижения на земле")]
-    float speed = 4.5f;
+    float speed = 4f;
     [Tooltip("Скорость передвижения в воздухе")]
     float airSpeed = 4.25f;
     float currentSpeed;

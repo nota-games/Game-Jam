@@ -36,6 +36,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "DownAttack",
+                    "type": "Button",
+                    "id": "f4f4e225-70e7-4e7b-b41b-d76c739aabd5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -196,7 +204,7 @@
                 {
                     "name": "",
                     "id": "b698b997-500b-4d21-9fbe-cf5ca5051e5a",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -218,11 +226,33 @@
                 {
                     "name": "",
                     "id": "2310c587-9b3d-4cd4-b1d9-826b297f0873",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "01c1ff5a-0139-46ac-8b9b-72bd7ea78c3a",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and mouse",
+                    "action": "DownAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5fac8245-27a3-469e-b065-948e7be92fc2",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "DownAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

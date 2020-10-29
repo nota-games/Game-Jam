@@ -49,6 +49,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""DownAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""f4f4e225-70e7-4e7b-b41b-d76c739aabd5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -209,7 +217,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b698b997-500b-4d21-9fbe-cf5ca5051e5a"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -231,11 +239,33 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2310c587-9b3d-4cd4-b1d9-826b297f0873"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01c1ff5a-0139-46ac-8b9b-72bd7ea78c3a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and mouse"",
+                    ""action"": ""DownAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5fac8245-27a3-469e-b065-948e7be92fc2"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""DownAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -278,6 +308,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_DownAttack = m_Player.FindAction("DownAttack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -331,6 +362,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_DownAttack;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -339,6 +371,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @DownAttack => m_Wrapper.m_Player_DownAttack;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -360,6 +393,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @DownAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDownAttack;
+                @DownAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDownAttack;
+                @DownAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDownAttack;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -376,6 +412,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @DownAttack.started += instance.OnDownAttack;
+                @DownAttack.performed += instance.OnDownAttack;
+                @DownAttack.canceled += instance.OnDownAttack;
             }
         }
     }
@@ -404,5 +443,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnDownAttack(InputAction.CallbackContext context);
     }
 }

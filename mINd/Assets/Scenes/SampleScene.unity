@@ -817,6 +817,7 @@ GameObject:
   - component: {fileID: 832802529}
   - component: {fileID: 832802528}
   - component: {fileID: 832802530}
+  - component: {fileID: 832802531}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1034,6 +1035,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: e12bec7a-eb2d-405d-8be5-41982b2818a1
     m_ActionName: Player/Attack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 832802531}
+        m_TargetAssemblyTypeName: PlayerDownAttack, Assembly-CSharp
+        m_MethodName: DownAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f4f4e225-70e7-4e7b-b41b-d76c739aabd5
+    m_ActionName: Player/DownAttack[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard and mouse
   m_DefaultActionMap: Player
@@ -1103,6 +1120,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1536
   range: 0.7
+--- !u!114 &832802531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832802521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d31b13dbf971d5640a30cc60c464e9c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &853775692
 GameObject:
   m_ObjectHideFlags: 0

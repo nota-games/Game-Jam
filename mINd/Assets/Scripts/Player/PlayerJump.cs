@@ -35,7 +35,7 @@ public class PlayerJump : MonoBehaviour
         isGrounded = CheckGround();
         gdeWall = CheckWall();
         DealDamage();
-        Debug.Log(isKeyDown);
+        Debug.Log(transform.rotation.y);
     }
 
     private void FixedUpdate()
@@ -71,12 +71,7 @@ public class PlayerJump : MonoBehaviour
             playerBody.AddForce(transform.up * jumpPower, ForceMode2D.Impulse);
 
         if (gdeWall)
-            StartCoroutine(Stan());
-
-        else if(!isGrounded && !gdeWall)
-        {
-            StartCoroutine(Stun());
-        }      
+            StartCoroutine(Stun());     
     }
 
     void DealDamage()
@@ -102,32 +97,14 @@ public class PlayerJump : MonoBehaviour
 
         player.enabled = false;
 
-        playerBody.velocity = Vector2.down * 22f;
-        yield return new WaitForSecondsRealtime(0.1f);
-
-        player.enabled = true;
-    }
-
-    IEnumerator Stan()
-    {
-        playerBody.velocity = Vector2.zero;
-
-        player.enabled = false;
-
         playerBody.AddForce((transform.up - transform.right) * jumpPower, ForceMode2D.Impulse);
 
-        switch (transform.rotation.y)
-        {
-            case 180f:
-                transform.rotation = new Quaternion(0f, 0f, 0f, 1f); break;
-            case 0f:
-                transform.rotation = new Quaternion(0, 180f, 0f, 1f); break;
-        }
+        if (transform.rotation.y <= 0.1f)
+            transform.rotation = new Quaternion(0, 180f, 0f, 1f);
+        else if (transform.rotation.y >= 0.9f)
+            transform.rotation = new Quaternion(0, 0f, 0f, 1f);
 
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(0.25f);
         player.enabled = true;
-    }
-
-
-    
+    }   
 }

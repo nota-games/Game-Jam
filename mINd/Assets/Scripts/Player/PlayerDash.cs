@@ -12,9 +12,9 @@ public class PlayerDash : MonoBehaviour
     [Tooltip("Дальность дэша в клетках")]
     float dashRange = 7.5f;
     Vector2 direction;
-    public float isActive = 1f;
+    public bool isActive = true;
     [Tooltip("Время отката дэша")]
-    float coolDown = 5f;
+    float coolDown = 3f;
 
     public Transform attackcheck;
     public LayerMask Enemy;
@@ -25,13 +25,6 @@ public class PlayerDash : MonoBehaviour
     {
         playerBody = GetComponent<Rigidbody2D>();
         player = GetComponent<PlayerMovement>();
-    }
-
-    void Update()
-    {
-        if (isActive < 1)
-            isActive += (1 / coolDown) * Time.deltaTime;
-        isActive = Mathf.Clamp01(isActive);
     }
 
     void FixedUpdate()
@@ -58,7 +51,7 @@ public class PlayerDash : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if (!context.performed || isActive < 1f)
+        if (!context.performed || !isActive)
             return;
 
         direction = player.input;
@@ -66,6 +59,7 @@ public class PlayerDash : MonoBehaviour
             direction = transform.right;
 
         StartCoroutine(Stun());
+        StartCoroutine(CoolDown());
     }
 
     IEnumerator Stun()
@@ -74,11 +68,19 @@ public class PlayerDash : MonoBehaviour
 
         player.enabled = false;
 
-        playerBody.velocity = new Vector2(direction.x, direction.y / 1.5f) * dashRange * 4;
+        playerBody.velocity = new Vector2(direction.x, direction.y) * dashRange * 4;
         yield return new WaitForSecondsRealtime(0.25f);
-        isActive = 0;
-
+        
         player.enabled = true;
+
+        playerBody.velocity = Vector2.zero;
+    }
+
+    IEnumerator CoolDown()
+    {
+        isActive = false;
+        yield return new WaitForSecondsRealtime(coolDown);
+        isActive = true;
     }
 
     private void OnDrawGizmosSelected()
