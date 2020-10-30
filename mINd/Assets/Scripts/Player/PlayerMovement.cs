@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     public float fallingGravityScale = 2f;
     bool isGrounded;
 
+    public Animator animations;
+
     void Awake()
     {
         playerBody = GetComponent<Rigidbody2D>();
@@ -26,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        animations.SetFloat("move", Mathf.Abs(playerBody.velocity.x));
         switch (input.x)
         {
             case 1f:

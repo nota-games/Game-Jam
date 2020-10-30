@@ -10,10 +10,13 @@ public class PlayerMeleeAttack : MonoBehaviour
     public float range = 0.7f;
     Collider2D[] enemies;
 
+    public Animator animations;
+
     public void Attack(InputAction.CallbackContext context)
     {
         if (!context.performed)
             return;
+        animations.SetTrigger("attack");
         enemies = Physics2D.OverlapCircleAll(attackCheck.position, range, Enemy);
         Damage();
     }
