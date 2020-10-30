@@ -29,13 +29,10 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         animations.SetFloat("move", Mathf.Abs(playerBody.velocity.x));
-        switch (input.x)
-        {
-            case 1f:
-                transform.rotation = new Quaternion(0f, 0f, 0f, 1f); break;
-            case -1f:
-                transform.rotation = new Quaternion(0, 180f, 0f, 1f); break;
-        }
+        if (input.x > 0f)
+            transform.rotation = new Quaternion(0f, 0f, 0f, 1f);
+        else if (input.x < 0f)
+            transform.rotation = new Quaternion(0f, 180f, 0f, 1f);
     }
 
     void FixedUpdate()
